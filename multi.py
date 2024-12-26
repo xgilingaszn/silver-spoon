@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from supabase import create_client, Client
 from threading import Thread, Event
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 import time
 import csv
 import string
@@ -71,7 +72,7 @@ def run_bot(data_account, recover=1):
         username =  kw.replace(" ", "-")
         fix_username = username+'_leaked_v'+random_string(4)
 
-        judul =f'{kw} Leaked Video onlyfans' 
+        judul =f'{kw} Leaked Onlifans Nude' 
 
         kalimat = kw
         kata_pertama = kalimat.split()[0]
@@ -173,8 +174,35 @@ def run_bot(data_account, recover=1):
         driver.get(f"https://www.spatial.io/@{fix_username}")
         time.sleep(20)
 
-        driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/div/div[1]/div[2]/div[1]/button').click()
-        time.sleep(2)
+
+
+        # XPath elemen target
+        xpath_target = '//*[@id="__next"]/div[1]/div/div[1]/div[2]/div[1]/button'
+
+        # Percobaan hingga 3 kali
+        max_attempts = 3
+        for attempt in range(1, max_attempts + 1):
+            try:
+                # Tunggu beberapa saat (jika diperlukan)
+             
+                
+                # Coba cari elemen
+                elementt = driver.find_element(By.XPATH, xpath_target)
+                print(f"Elemen ditemukan pada percobaan ke-{attempt}")
+                driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/div/div[1]/div[2]/div[1]/button').click()
+                time.sleep(2)
+                break  # Jika elemen ditemukan, keluar dari loop
+            except NoSuchElementException:
+                print(f"Elemen tidak ditemukan pada percobaan ke-{attempt}")
+                if attempt < max_attempts:
+                    print("Reload halaman...")
+                    driver.get(f"https://www.spatial.io/@{fix_username}")
+                    time.sleep(15)
+                else:
+                    print("Elemen tidak ditemukan setelah 3 kali percobaan.")
+                    pass  # Lanjutkan tanpa error setelah 3 kali percobaan
+
+
 
 
         input_element2 = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Name"]')
